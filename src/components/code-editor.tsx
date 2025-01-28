@@ -1,8 +1,8 @@
 import { Editor, Monaco } from "@monaco-editor/react";
-import * as Y from "yjs";
-import { WebsocketProvider } from "y-websocket";
-import { MonacoBinding } from "y-monaco";
-import { useEffect, useRef } from "react";
+// import * as Y from "yjs";
+// import { WebsocketProvider } from "y-websocket";
+// import { MonacoBinding } from "y-monaco";
+// import { useEffect, useRef } from "react";
 // import type * as monaco from "monaco-editor";
 
 const CodeEditor = () => {
