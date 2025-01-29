@@ -1,51 +1,37 @@
 import { useState } from "react";
 import { File, Folder, ChevronRight, ChevronDown } from "lucide-react";
 
-type FileItem = {
+export interface FileItem {
   id: string;
   name: string;
   type: "file" | "folder";
   children?: FileItem[];
-};
+}
 
-const dummyData: FileItem[] = [
-  {
-    id: "1",
-    name: "src",
-    type: "folder",
-    children: [
-      {
-        id: "2",
-        name: "components",
-        type: "folder",
-        children: [
-          { id: "3", name: "file-explorer.tsx", type: "file" },
-          { id: "4", name: "editor.tsx", type: "file" },
-        ],
-      },
-      { id: "5", name: "App.tsx", type: "file" },
-      { id: "6", name: "index.tsx", type: "file" },
-    ],
-  },
-  {
-    id: "7",
-    name: "public",
-    type: "folder",
-    children: [
-      { id: "8", name: "index.html", type: "file" },
-      { id: "9", name: "favicon.ico", type: "file" },
-    ],
-  },
-];
+interface FileExplorerItemProps {
+  item: FileItem;
+  onFileSelect?: (item: FileItem) => void;
+}
 
-const FileExplorerItem = ({ item }: { item: FileItem }) => {
+const FileExplorerItem: React.FC<FileExplorerItemProps> = ({
+  item,
+  onFileSelect,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = () => {
+    if (item.type === "folder") {
+      setIsOpen(!isOpen);
+    } else if (onFileSelect) {
+      onFileSelect(item);
+    }
+  };
 
   return (
     <div>
       <div
         className="flex items-center hover:bg-[#37373d] py-1 cursor-pointer text-[#cccccc] group"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleClick}
       >
         <div className="flex items-center w-full px-4">
           {item.type === "folder" ? (
@@ -66,7 +52,11 @@ const FileExplorerItem = ({ item }: { item: FileItem }) => {
       {isOpen && item.children && (
         <div className="ml-4">
           {item.children.map((child) => (
-            <FileExplorerItem key={child.id} item={child} />
+            <FileExplorerItem
+              key={child.id}
+              item={child}
+              onFileSelect={onFileSelect}
+            />
           ))}
         </div>
       )}
@@ -74,15 +64,27 @@ const FileExplorerItem = ({ item }: { item: FileItem }) => {
   );
 };
 
-const FileExplorer = () => {
+interface FileExplorerProps {
+  data?: FileItem[];
+  onFileSelect?: (item: FileItem) => void;
+}
+
+const FileExplorer: React.FC<FileExplorerProps> = ({
+  data = [],
+  onFileSelect,
+}) => {
   return (
     <div className="h-[90vh] w-full flex flex-col">
       <div className="p-2">
         <div className="text-xs uppercase font-semibold">Explorer</div>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {dummyData.map((item) => (
-          <FileExplorerItem key={item.id} item={item} />
+        {data.map((item) => (
+          <FileExplorerItem
+            key={item.id}
+            item={item}
+            onFileSelect={onFileSelect}
+          />
         ))}
       </div>
     </div>

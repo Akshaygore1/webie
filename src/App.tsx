@@ -4,13 +4,21 @@ import FileExplorer from "./components/file-explorer";
 import CodeEditor from "./components/code-editor";
 import Tabs from "./components/editor-tabs";
 import { useState } from "react";
+import Header from "./components/header";
+
+type Tab = {
+  id: string;
+  name: string;
+};
 
 function App() {
-  const [tabs, setTabs] = useState([
+  const [tabs, setTabs] = useState<Tab[]>([
     { id: "1", name: "App.tsx" },
     { id: "2", name: "index.tsx" },
   ]);
-  const [activeTab, setActiveTab] = useState("1");
+  const [activeTab, setActiveTab] = useState<string>("1");
+  const [isTerminalVisible, setIsTerminalVisible] = useState(true);
+  const [isFileExplorerVisible, setIsFileExplorerVisible] = useState(true);
 
   const handleCloseTab = (id: string) => {
     setTabs(tabs.filter((tab) => tab.id !== id));
@@ -19,40 +27,45 @@ function App() {
     }
   };
 
+  const Sidebar = () => (
+    <div className="w-10 bg-primary flex flex-col items-center">
+      <div className="p-2 text-primary text-white hover:bg-[#444653] cursor-pointer rounded-md">
+        <Folder width={16} height={16} />
+      </div>
+      <div className="p-2 text-primary text-white hover:bg-[#444653] cursor-pointer mt-2 rounded-md">
+        <Search width={16} height={16} />
+      </div>
+    </div>
+  );
+
   return (
     <div className="h-screen w-screen overflow-hidden">
       <div className="flex flex-col h-full bg-[#1e1e1e] text-white">
-        {/* Top Bar */}
-        <div className="h-12 bg-primary flex items-center px-4">
-          <div className="text-[#cccccc] text-sm">Web IDE</div>
-        </div>
+        <Header
+          isTerminalVisible={isTerminalVisible}
+          setIsTerminalVisible={setIsTerminalVisible}
+          isFileExplorerVisible={isFileExplorerVisible}
+          setIsFileExplorerVisible={setIsFileExplorerVisible}
+        />
 
-        {/* Main Content */}
         <div className="flex flex-1">
-          {/* Icon Sidebar */}
-          <div className="w-10 bg-primary flex flex-col items-center ">
-            <div className="p-2 text-primary text-white hover:bg-[#444653] cursor-pointer rounded-md">
-              <Folder width={16} height={16} />
-            </div>
-            <div className="p-2 text-primary text-white hover:bg-[#444653] cursor-pointer mt-2 rounded-md">
-              <Search width={16} height={16} />
-            </div>
-          </div>
-
+          <Sidebar />
           <div className="bg-secondary w-full h-full">
             <PanelGroup direction="horizontal">
-              <Panel defaultSize={20} minSize={15}>
+              <Panel
+                defaultSize={20}
+                minSize={15}
+                className={!isFileExplorerVisible ? "hidden" : ""}
+              >
                 <div className="h-full bg-black rounded-md">
                   <FileExplorer />
                 </div>
               </Panel>
 
-              <PanelResizeHandle className="w-2" />
+              {isFileExplorerVisible && <PanelResizeHandle className="w-2" />}
 
-              {/* Editor and Terminal Stack */}
               <Panel defaultSize={80}>
                 <PanelGroup direction="vertical">
-                  {/* Editor Area */}
                   <Panel defaultSize={70} minSize={30}>
                     <div className="h-full bg-black rounded-md ">
                       <div>
@@ -68,11 +81,12 @@ function App() {
                       <CodeEditor />
                     </div>
                   </Panel>
-
-                  <PanelResizeHandle className="h-2" />
-
-                  {/* Terminal Area */}
-                  <Panel defaultSize={30} minSize={15}>
+                  {isTerminalVisible && <PanelResizeHandle className="h-2" />}
+                  <Panel
+                    defaultSize={30}
+                    minSize={15}
+                    className={!isTerminalVisible ? "hidden" : ""}
+                  >
                     <div className="h-full bg-black p-2 rounded-md">
                       <div className="p-2 text-[#cccccc] font-mono text-sm">
                         Terminal

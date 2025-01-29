@@ -1,18 +1,18 @@
 import { X, FileCode, FileJson, FileText } from "lucide-react";
 
-type Tab = {
+export interface Tab {
   id: string;
   name: string;
-};
+}
 
-type TabsProps = {
+interface TabsProps {
   tabs: Tab[];
   activeTab?: string;
   onClose: (id: string) => void;
   onSelect: (id: string) => void;
-};
+}
 
-const getFileIcon = (fileName: string) => {
+const getFileIcon = (fileName: string): JSX.Element => {
   const extension = fileName.split(".").pop()?.toLowerCase();
   switch (extension) {
     case "tsx":
@@ -27,7 +27,7 @@ const getFileIcon = (fileName: string) => {
   }
 };
 
-const Tabs = ({ tabs, activeTab, onClose, onSelect }: TabsProps) => {
+const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onClose, onSelect }) => {
   return (
     <div className="flex gap-2">
       {tabs.length ? (
@@ -41,27 +41,19 @@ const Tabs = ({ tabs, activeTab, onClose, onSelect }: TabsProps) => {
           >
             {getFileIcon(tab.name)}
             <span className="text-sm text-[#cccccc]">{tab.name}</span>
-            {activeTab === tab.id ? (
-              <button
-                className="p-1 hover:bg-[#444653] rounded-sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClose(tab.id);
-                }}
-              >
-                <X size={14} />
-              </button>
-            ) : (
-              <button
-                className="p-1 hover:bg-[#444653] rounded-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClose(tab.id);
-                }}
-              >
-                <X size={14} />
-              </button>
-            )}
+            <button
+              className={`p-1 hover:bg-[#444653] rounded-sm ${
+                activeTab === tab.id
+                  ? ""
+                  : "opacity-0 group-hover:opacity-100 transition-opacity"
+              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose(tab.id);
+              }}
+            >
+              <X size={14} />
+            </button>
           </div>
         ))
       ) : (
