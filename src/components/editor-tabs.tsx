@@ -1,9 +1,5 @@
+import { Tab } from "@/lib/types";
 import { X, FileCode, FileJson, FileText } from "lucide-react";
-
-export interface Tab {
-  id: string;
-  name: string;
-}
 
 interface TabsProps {
   tabs: Tab[];

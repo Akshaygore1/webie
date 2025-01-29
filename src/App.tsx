@@ -5,11 +5,8 @@ import CodeEditor from "./components/code-editor";
 import Tabs from "./components/editor-tabs";
 import { useState } from "react";
 import Header from "./components/header";
-
-type Tab = {
-  id: string;
-  name: string;
-};
+import { fileData } from "../mockData";
+import { Tab } from "./lib/types";
 
 function App() {
   const [tabs, setTabs] = useState<Tab[]>([
@@ -58,7 +55,7 @@ function App() {
                 className={!isFileExplorerVisible ? "hidden" : ""}
               >
                 <div className="h-full bg-black rounded-md">
-                  <FileExplorer />
+                  <FileExplorer data={fileData} />
                 </div>
               </Panel>
 

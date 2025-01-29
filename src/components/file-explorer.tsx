@@ -1,17 +1,6 @@
 import { useState } from "react";
 import { File, Folder, ChevronRight, ChevronDown } from "lucide-react";
-
-export interface FileItem {
-  id: string;
-  name: string;
-  type: "file" | "folder";
-  children?: FileItem[];
-}
-
-interface FileExplorerItemProps {
-  item: FileItem;
-  onFileSelect?: (item: FileItem) => void;
-}
+import { FileExplorerItemProps, FileItem } from "@/lib/types";
 
 const FileExplorerItem: React.FC<FileExplorerItemProps> = ({
   item,
